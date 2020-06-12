@@ -34,17 +34,19 @@ def ip():
     
 def arp():
     arp_request = scapy.arping(ar)
-    print(ar)
+
 
 def arp2():
     arp_request = scapy.arping(input(str('Inter IP : ')))
-    print(ar)
+
 
 ###################################
 if ar != None:
     arp()
+    sys.exit()
 elif interface != None:
     mac()
+    sys.exit()
 
 ###################################
 if interface == None:
