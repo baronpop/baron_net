@@ -1,8 +1,9 @@
-from subprocess import call
+from subprocess import call , check_output
 from optparse import OptionParser
 import scapy.all as scapy
 import socket ,sys ,time
 from termcolor import colored
+from re import search
 ###################################
 
 parser = OptionParser()
@@ -22,9 +23,12 @@ def mac():
     call('ifconfig '+interface+' hw ether '+nummac, shell=True)
     call('ifconfig '+interface+' up', shell=True)
     call('clear',shell=True)
-    color = colored('\t[+] Changed Succssesfully', 'green' ,'on_yellow' ,['bold'])
+    color = colored('[+] Changed Succssesfully', 'green' ,'on_blue' ,['bold'])
     print(color)
-    call('ifconfig '+interface+' | grep ether', shell=True)
+    #call('ifconfig '+interface+' | grep ether', shell=True)
+    ifconfig_result = check_output(['ifconfig',interface]).decode()
+    role = search(r'\w\w:\w\w:\w\w:\w\w:\w\w:\w\w',ifconfig_result)
+    print('Your New Mac : ',role.group(0))
 
 
 def ip():
@@ -34,11 +38,7 @@ def ip():
     
 def arp():
     arp_request = scapy.arping(ar)
-
-
-def arp2():
-    arp_request = scapy.arping(input(str('Inter IP : ')))
-
+    print(ar)
 
 ###################################
 if ar != None:
@@ -65,16 +65,10 @@ if interface == None:
 
     elif butt == '2':
         print('Your Local IP : '+ip())
-        arp2()
+        arp()
 
     else:
         invalid = colored('[!] Invalid Option', 'red')
         print(invalid)
         sys.exit()
-print('''
-                   ===================================
-                   |                                 |
-                   |              BARON              |
-                   |                                 |
-                   ===================================
-''')
+
